@@ -1,0 +1,43 @@
+body{
+    background-color: #edf1f5;
+}
+
+#email_inp{
+    width: 52vw;
+    padding: 1vw;
+    background-color: transparent;
+}
+.q_card{
+    width: 50vw;
+    /* width: max-content; */
+    min-height: 10vh;
+    background-color: white;
+    border: 1px solid #dddddd ;
+    border-radius: 10px;
+    padding: 1vw;
+    margin: 1vh;
+    text-align: left;
+}
+ul{
+    list-style: none ;
+}
+input[type="radio"]{
+    cursor: pointer;
+}
+input[type="text"] {
+    border: none;
+    border-bottom: 1px solid #dddddd;
+    outline: none;
+    width: 95%;
+}
+input[type="text"]:focus{
+    border: none;
+    border-bottom: 1px solid #333333;
+}
+button{
+    cursor: pointer;
+    /* background-color: powderblue;
+    border: 1px solid black; */
+    color: #777777;
+    
+}
