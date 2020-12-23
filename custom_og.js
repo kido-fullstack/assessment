@@ -1,5 +1,4 @@
 var slide_ind = 1;
-var url = ((document.location.host).indexOf("localhost") !== -1) ? 'http://localhost/mat_api/api.php' : 'https://api.smdmart.in/smd/api.php';
 
 document.addEventListener('scroll', function (event) {
     var scroll = window.scrollY;
@@ -561,7 +560,7 @@ function print_order_pdf(ord_id) {
         doc.setFont("helvetica");
         doc.setFontType("bold");
         doc.setFontSize(9);
-        doc.save("OrderId_"+ord_id+":SmdMart.pdf");
+        doc.save("OrderId_"+ord_id+":asdMart.pdf");
     },margin);
 }
 

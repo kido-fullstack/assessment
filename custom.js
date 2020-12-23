@@ -1,5 +1,5 @@
 var slide_ind = 1;
-var url = ((document.location.host).indexOf("localhost") !== -1) ? 'http://localhost/questions/apis/api.php' : 'https://api.php';
+var url = ((document.location.host).indexOf("localhost") !== -1) ? 'http://localhost/questions/apis/api.php' : 'https://dev.kido.school/questions/apis/api.php';
 function ImgError(img) {
     img.src = "images/logo_n.jpeg";
 }
