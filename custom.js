@@ -187,15 +187,20 @@ $(document).on('click','#submit_answer',function(){
     !all_answered ?  tester += " Please answer all questions. " : false;
 
     !isEmail($("#email_inp").val())  ? tester +=" Please entre valid Email" : false;
-
     var ord = requester(url,"POST",{'api':'update_lead','user_email':$('#email_inp').val()});
 
-    console.log(ord);
+    console.log((JSON.parse(ord)[0].ProspectStage));
+
+    if((JSON.parse(ord)[0].ProspectStage)){
+        
+    }
+
+    alert((JSON.parse(ord)[0].ProspectStage));
 
     // if(tester.length == 0){
-
     //     var ord = requester(url,"POST",{'api':'update_lead','user_email':$('#email_inp').val()});
-
+    //     console.log(ord);
+    //     // alert()
     // }else{
     //     alert(tester);
     // }
