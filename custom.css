@@ -2,7 +2,7 @@ body{
     background-color: #edf1f5;
 }
 
-#email_inp{
+#email_inp,#user_ans_inp{
     width: 52vw;
     padding: 1vw;
     background-color: transparent;

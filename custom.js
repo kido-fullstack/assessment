@@ -1,5 +1,5 @@
 var slide_ind = 1;
-var url = ((document.location.host).indexOf("localhost") !== -1) ? 'http://localhost/questions/apis/api.php' : 'https://dev.kido.school/questions/apis/api.php';
+var url = ((document.location.host).indexOf("localhost") !== -1) ? 'http://localhost/assessment/apis/api.php' : 'https://dev.kido.school/questions/apis/api.php';
 function ImgError(img) {
     img.src = "images/logo_n.jpeg";
 }
@@ -140,6 +140,58 @@ function update_home() {
 }
 
 
+function init_answers() {
+    // var questions = local_get('questions');
+    // var q_card_def = local_set('q_card_def',$('.q_card:first').html());
+    // $('#question_div').empty();
+}
+
+
+function update_answers() {
+    var questions = local_get('questions');
+    var q_card_def = $('.q_card:first').css("display","block");
+    $('#question_div').empty();
+    var params = {'api':'get_user_answers','user_email':$('#user_ans_inp').val()};
+    var answers =  key_mapper(JSON.parse(requester(url,type,params)),'question_id');
+    // console.log(answers);
+    if (Object.keys(answers).length){
+        $.each(questions, function (k, v) {
+            var q_card  = q_card_def.clone();
+            q_card.find('.q_desc').text(v.question);
+            q_card.attr('q_id',k);
+            q_card.attr('q_type',v.type);
+            // console.log(v.question);
+            var opts = "";
+            if(v.type == 1){
+                $.each(v.options, function (k1, v1) {
+                    var is_checked = "";
+                    if(answers[k]['selected_option']){
+                        (answers[k]['selected_option'] == k1) ? is_checked =  "checked" : false;
+                    }
+                    opts += '<li><input disabled '+is_checked+' type="radio" name="'+k+'" value="'+k1+'">'+v1+'</li>';
+                });
+                q_card.find('.q_opts').html(opts);
+            }else{
+                var usr_ans = (answers[k]['long_answer']) ? answers[k]['long_answer'] : "";
+                opts += '<li><input type="text" disabled placeholder="Your Answer" name="'+k+'" value="'+usr_ans+'" /></li>';
+            }
+            q_card.find('.q_opts').html(opts);
+            $('#question_div').append(q_card);
+        });
+    }else{
+        alert("User not found");
+    }
+}
+
+function key_mapper(arr,ind) {
+    var fin = {};
+    $.each(arr, function (k1, v1) {
+        fin[v1[ind]] = v1;
+    });
+    return fin;
+}
+
+
 $(document).ready(function() {
     // window.addEventListener('load', function() {
         // navto('admin');
@@ -163,47 +215,68 @@ $(document).ready(function() {
     // });
 });
 
+$(document).on('click','#get_answer',function(){
+
+    update_answers();
+    // var params = {'user_email':$('#user_ans_inp').val(),'api':'get_user_answers'};
+    // var user_answers =  JSON.parse(requester(url,"POST",params));
+
+    // console.log(user_answers);
+    
+
+});
+
+
 $(document).on('click','#submit_answer',function(){
 
     var tester = "";
     var all_answered = true;
+    var user_answers = {};
 
     $(".q_card").each(function() {
-
             var qname = $(this).attr("q_id") ;
-
             var answer = null;
-
-            if($(this).attr("q_type") == 1){
+            var q_type = $(this).attr("q_type");
+            if(q_type == 1){
                 answer = $('input[name='+qname+']:checked').val();
             }else{
                 answer = $('input[name='+qname+']').val();
             }
-
             !answer ?  all_answered = false : false;
 
+            user_answers[qname] = {};
+
+            user_answers[qname]['answer'] = answer;
+            user_answers[qname]['type'] = q_type;
     });
 
     !all_answered ?  tester += " Please answer all questions. " : false;
 
     !isEmail($("#email_inp").val())  ? tester +=" Please entre valid Email" : false;
-    var ord = requester(url,"POST",{'api':'update_lead','user_email':$('#email_inp').val()});
 
-    console.log((JSON.parse(ord)[0].ProspectStage));
+    // console.log(user_answers);
 
-    if((JSON.parse(ord)[0].ProspectStage)){
-        
-    }
+    // local_set("temp_answers",user_answers);
 
-    alert((JSON.parse(ord)[0].ProspectStage));
+    // var ord = requester(url,"POST",{'api':'update_lead','user_email':$('#email_inp').val(),"user_answers":user_answers});
+    // // console.log((JSON.parse(ord)[0].ProspectStage));
+    // if((JSON.parse(ord)[0].ProspectStage)){
 
-    // if(tester.length == 0){
-    //     var ord = requester(url,"POST",{'api':'update_lead','user_email':$('#email_inp').val()});
-    //     console.log(ord);
-    //     // alert()
-    // }else{
-    //     alert(tester);
     // }
+
+    // alert((JSON.parse(ord)[0].ProspectStage));
+
+    if(tester.length == 0){
+        // var ord = requester(url,"POST",{'api':'update_lead','user_email':$('#email_inp').val()});
+        var result = requester(url,"POST",{'api':'save_user_answers','user_email':$('#email_inp').val(),'user_answers':user_answers});
+        var res  = JSON.parse(result);
+        alert(res["msg"]);location.reload();
+
+        // console.log(ord);
+        // alert()
+    }else{
+        alert(tester);
+    }
 
 });
 
